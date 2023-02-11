@@ -24,22 +24,33 @@ SECRET_KEY = 'django-insecure-fx4uz#d!aun@@-xow_nnu#25911x-r0bump2c5s+^gzto9qb)@
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+CORS_ALLOW_ALL_ORIGINS: True
+ALLOWED_HOSTS = ["http://localhost:3000", "http://127.0.0.1:8000", '127.0.0.1']
 
-ALLOWED_HOSTS = []
-
-
-# Application definition
+CORS_ALLOW_METHODS = [
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+]
 
 INSTALLED_APPS = [
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'apps.users',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
