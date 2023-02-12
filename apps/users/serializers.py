@@ -32,6 +32,9 @@ class AccountSerializers(serializers.ModelSerializer):
         fields = ['id', 'username', 'email', 'password', 'password2', 'phone_number', 'first_name', 'last_name']
 
 
+class AccountDetailSerializer(serializers.ModelSerializer):
 
-
+    class Meta:
+        model = Account
+        fields = ['id', 'username', 'email', 'phone_number', 'first_name', 'last_name']
 

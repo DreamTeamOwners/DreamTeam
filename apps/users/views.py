@@ -6,7 +6,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import Account
 from .permissions import AnonPermissionOnly
-from .serializers import MyTokenObtainPairSerializer
+from .serializers import MyTokenObtainPairSerializer, AccountDetailSerializer
 from django.contrib.auth.models import User
 from .serializers import AccountSerializers
 from rest_framework import permissions
@@ -40,3 +40,16 @@ class RegisterApiView(APIView):
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class UserDetailApiView(APIView):
+
+    def get_object(self, id):
+        try:
+            return Account.objects.get(id=id)
+        except Account.DoesNotExist:
+            raise Http404
+
+    def get(self, request, id):
+        user = self.get_object(id)
+        serializers = AccountDetailSerializer(user)
+        data = serializers.data
+        return Response(data)
