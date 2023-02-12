@@ -32,6 +32,8 @@ class RegisterApiView(APIView):
             account = Account.objects.create(
                 user=user,
                 phone_number=request.data['phone_number'],
+                first_name=request.data['first_name'],
+                second_name=request.data['second_name'],
             )
             account.save()
             return Response(serializers.data, status=status.HTTP_201_CREATED)
