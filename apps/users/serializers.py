@@ -16,18 +16,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         return token
 
 
-class UserSerializers(serializers.ModelSerializer):
-
-    class Meta:
-        model = User
-        fields = ['id', 'username', 'email']
-
-
 class AccountSerializers(serializers.ModelSerializer):
-    email = serializers.EmailField(
-        required=True,
-        validators=[UniqueValidator(queryset=User.objects.all())]
-    )
     password = serializers.CharField(
         write_only=True,
         required=True,
@@ -37,11 +26,12 @@ class AccountSerializers(serializers.ModelSerializer):
         write_only=True,
         required=True,
     )
-    username = serializers.CharField(
-        write_only=True,
-        required=True,
-    )
 
     class Meta:
         model = Account
-        fields = ['id', 'username', 'email', 'password', 'password2', 'phone_number', 'first_name', 'second_name']
+        fields = ['id', 'username', 'email', 'password', 'password2', 'phone_number', 'first_name', 'last_name']
+
+
+
+
+

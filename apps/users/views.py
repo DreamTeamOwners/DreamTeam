@@ -1,3 +1,4 @@
+from django.http import Http404
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -23,18 +24,19 @@ class RegisterApiView(APIView):
     def post(self, request):
         serializers = AccountSerializers(data=request.data)
         if serializers.is_valid():
-            user = User.objects.create(
-                username=request.data['username'],
-                email=request.data['email']
-            )
+            user = User.objects.create()
             user.set_password(request.data['password'])
             user.save()
             account = Account.objects.create(
                 user=user,
                 phone_number=request.data['phone_number'],
+                username=request.data['username'],
+                email=request.data['email'],
                 first_name=request.data['first_name'],
-                second_name=request.data['second_name'],
+                last_name=request.data['last_name'],
             )
             account.save()
             return Response(serializers.data, status=status.HTTP_201_CREATED)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
