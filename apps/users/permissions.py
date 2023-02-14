@@ -8,7 +8,7 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         return obj.user == request.user
 
 
-class AnonPermissionOnly(permissions.BasePermission):
+class AnonPermission(permissions.BasePermission):
     message = "You are already authenticated"
 
     def has_permission(self, request, view):

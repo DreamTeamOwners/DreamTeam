@@ -1,9 +1,9 @@
 from django.contrib.auth.password_validation import validate_password
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
-from django.contrib.auth.models import User
-from .models import Account
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+from .models import MyUser
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -11,16 +11,12 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super(MyTokenObtainPairSerializer, cls).get_token(user)
+        token['email'] = user.email
 
-        token['username'] = user.username
         return token
 
 
-class AccountSerializers(serializers.ModelSerializer):
-    email = serializers.EmailField(
-        required=True,
-        validators=[UniqueValidator(queryset=User.objects.all())]
-    )
+class MyUserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         write_only=True,
         required=True,
@@ -30,27 +26,22 @@ class AccountSerializers(serializers.ModelSerializer):
         write_only=True,
         required=True,
     )
-    username = serializers.CharField(
-        write_only=True,
-        required=True,
-    )
-    first_name = serializers.CharField(
-        write_only=True,
-        required=True,
-    )
-    last_name = serializers.CharField(
-        write_only=True,
-        required=True,
-    )
 
     class Meta:
-        model = Account
-        fields = ['id', 'username', 'email', 'password', 'password2', 'phone_number', 'first_name', 'last_name']
+        model = MyUser
+        fields = [
+            'id',
+            'email',
+            'username',
+            'first_name',
+            'last_name',
+            'password',
+            'password2',
+        ]
 
-
-class UserDetailSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = User
-        fields = ['id', 'username', 'email', 'first_name', 'last_name']
-
+    def validate(self, attrs):
+        if attrs['password'] != attrs['password2']:
+            raise serializers.ValidationError(
+                {'password': "Password fields didn't match."}
+            )
+        return attrs
