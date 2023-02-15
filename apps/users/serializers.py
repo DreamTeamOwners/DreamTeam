@@ -16,7 +16,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         return token
 
 
-class MyUserSerializer(serializers.ModelSerializer):
+class MyUserRegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         write_only=True,
         required=True,
@@ -45,3 +45,22 @@ class MyUserSerializer(serializers.ModelSerializer):
                 {'password': "Password fields didn't match."}
             )
         return attrs
+
+
+class MyUserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = MyUser
+        fields = ['id', 'username', 'email', 'first_name', 'last_name']
+
+
+
+
+
+
+
+
+
+
+
+
