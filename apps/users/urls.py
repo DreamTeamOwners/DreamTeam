@@ -5,7 +5,8 @@ from rest_framework_simplejwt.views import (
 from apps.users.views import (
     RegisterAPIView,
     LoginView,
-    UserDetailAPIView
+    UserDetailAPIView,
+    ProfileAPIView
 )
 
 
@@ -16,4 +17,6 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='token'),
 
     path('user_detail/<int:id>/', UserDetailAPIView.as_view(), name='user_detail'),
+    path('profile/', ProfileAPIView.as_view(), name='user_profile'),
+
 ]

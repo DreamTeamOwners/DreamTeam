@@ -4,11 +4,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from apps.users.models import MyUser
+from apps.users.models import MyUser, Profile
 from apps.users.permissions import AnonPermission
 from apps.users.serializers import (MyTokenObtainPairSerializer,
                                     MyUserRegisterSerializer,
-                                    MyUserSerializer)
+                                    MyUserSerializer, ProfileSerializer)
 
 
 class LoginView(TokenObtainPairView):
@@ -29,6 +29,18 @@ class RegisterAPIView(APIView):
             )
             user.set_password(request.data['password'])
             user.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ProfileAPIView(APIView):
+    permission_classes = [permissions.AllowAny]
+    serializer_class = ProfileSerializer
+
+    def post(self, request):
+        serializer = ProfileSerializer(data=request.data)
+        if serializer.is_valid():
+            resume = Profile.objects.create()
+            resume.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
