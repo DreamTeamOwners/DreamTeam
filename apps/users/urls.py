@@ -6,7 +6,8 @@ from apps.users.views import (
     RegisterAPIView,
     LoginView,
     UserDetailAPIView,
-    ProfileAPIView
+    ProfileAPIView,
+    ProfileDetailAPIView
 )
 
 
@@ -17,6 +18,8 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='token'),
 
     path('user_detail/<int:id>/', UserDetailAPIView.as_view(), name='user_detail'),
+    path('profile_detail/<int:id>/', ProfileDetailAPIView.as_view(), name='profile_detail'),
     path('profile/', ProfileAPIView.as_view(), name='user_profile'),
+
 
 ]

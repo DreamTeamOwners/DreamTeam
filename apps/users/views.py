@@ -59,3 +59,17 @@ class UserDetailAPIView(APIView):
         serializers = MyUserSerializer(user)
         data = serializers.data
         return Response(data)
+
+class ProfileDetailAPIView(APIView):
+
+    def get_object(self, id):
+        try:
+            return Profile.objects.get(id=id)
+        except Profile.DoesNotExist:
+            raise Http404
+
+    def get(self, request, id):
+        profile = self.get_object(id)
+        serializers = ProfileSerializer(profile)
+        data = serializers.data
+        return Response(data)
