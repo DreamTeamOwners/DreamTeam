@@ -32,6 +32,7 @@ class RegisterAPIView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class ProfileAPIView(APIView):
     permission_classes = [permissions.AllowAny]
     serializer_class = ProfileSerializer
@@ -40,7 +41,6 @@ class ProfileAPIView(APIView):
         serializer = ProfileSerializer(data=request.data)
         if serializer.is_valid():
             profile=serializer.save()
-            MyUser.user=request.user
             profile.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -60,11 +60,12 @@ class UserDetailAPIView(APIView):
         data = serializers.data
         return Response(data)
 
+
 class ProfileDetailAPIView(APIView):
 
     def get_object(self, id):
         try:
-            return Profile.objects.get(id=id)
+            return Profile.objects.get(user=id)
         except Profile.DoesNotExist:
             raise Http404
 

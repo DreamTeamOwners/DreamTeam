@@ -35,3 +35,4 @@ class Profile(models.Model):
     experience = models.CharField(max_length=255, null=True, blank=True)
     github = models.CharField(max_length=255, null=True, blank=True)
 
+
