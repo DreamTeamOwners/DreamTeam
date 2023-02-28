@@ -16,7 +16,7 @@ class LoginView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
 
-class RegisterAPIView(APIView):
+class UserRegisterAPIView(APIView):
     permission_classes = [permissions.AllowAny]
     serializer_class = MyUserRegisterSerializer
 
@@ -26,6 +26,25 @@ class RegisterAPIView(APIView):
             user = MyUser.objects.create(
                 email=request.data['email'],
                 username=request.data['username'],
+                is_company=False
+            )
+            user.set_password(request.data['password'])
+            user.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CompanyRegisterAPIView(APIView):
+    permission_classes = [permissions.AllowAny]
+    serializer_class = MyUserRegisterSerializer
+
+    def post(self, request):
+        serializer = MyUserRegisterSerializer(data=request.data)
+        if serializer.is_valid():
+            user = MyUser.objects.create(
+                email=request.data['email'],
+                username=request.data['username'],
+                is_company=True
             )
             user.set_password(request.data['password'])
             user.save()

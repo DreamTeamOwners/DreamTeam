@@ -16,6 +16,8 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
 
+    is_company = models.BooleanField(default=False)
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
@@ -23,3 +25,6 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f'{self.email}'
+
+
+    
