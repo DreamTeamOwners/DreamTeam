@@ -22,13 +22,19 @@ class RegisterAPIView(APIView):
 
     def post(self, request):
         serializer = MyUserRegisterSerializer(data=request.data)
+        serializer2 = ProfileSerializer(None)
         if serializer.is_valid():
+
             user = MyUser.objects.create(
                 email=request.data['email'],
                 username=request.data['username'],
             )
             user.set_password(request.data['password'])
             user.save()
+            profile = Profile.objects.create(
+                user=user
+            )
+            profile.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -37,10 +43,10 @@ class ProfileAPIView(APIView):
     permission_classes = [permissions.AllowAny]
     serializer_class = ProfileSerializer
 
-    def post(self, request):
+    def put(self, request):
         serializer = ProfileSerializer(data=request.data)
         if serializer.is_valid():
-            profile=serializer.save()
+            profile = serializer.save()
             profile.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
