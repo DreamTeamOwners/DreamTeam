@@ -27,4 +27,20 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         return f'{self.email}'
 
 
-    
+class JobPosition(models.Model):
+    name = models.CharField(max_length=255, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Profile(models.Model):
+    user = models.ForeignKey(MyUser, on_delete=models.CASCADE)
+    job_position = models.ForeignKey(JobPosition, on_delete=models.CASCADE, null=True, blank=True)
+    first_name = models.CharField(max_length=255, null=True, blank=True)
+    last_name = models.CharField(max_length=255, null=True, blank=True)
+    phone_number = models.CharField(max_length=255, null=True, blank=True)
+    country = models.CharField(max_length=255, null=True, blank=True)
+    description = models.CharField(max_length=255, null=True, blank=True)
+    experience = models.CharField(max_length=255, null=True, blank=True)
+    github = models.CharField(max_length=255, null=True, blank=True)
