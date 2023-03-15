@@ -9,7 +9,8 @@ from apps.users.models import MyUser, Profile
 from apps.users.permissions import AnonPermission, IsOwnerOrReadOnly
 from apps.users.serializers import (MyTokenObtainPairSerializer,
                                     MyUserRegisterSerializer,
-                                    MyUserSerializer, ProfileDetailSerializer, ProfileUpdateSerializer)
+                                    MyUserSerializer, ProfileDetailSerializer, ProfileUpdateSerializer,
+                                    MyProfileSerializer)
 
 
 class LoginView(TokenObtainPairView):
@@ -49,6 +50,7 @@ class ProfileDetailAPIView(APIView):
         except Profile.DoesNotExist:
             raise Http404
 
+
     def get(self, request, id):
         profile = self.get_object(id)
         serializers = ProfileDetailSerializer(profile)
@@ -65,8 +67,16 @@ class ProfileUpdateAPIView(APIView):
 
     def put(self, request):
         profile = self.get_object()
+
         serializer = ProfileUpdateSerializer(profile, data=request.data)
         if serializer.is_valid():
             serializer.save(user=self.request.user)
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class MyProfileAPIView(APIView):
+    def get(self, request):
+        profile = Profile.objects.get(user=request.user)
+        serializer = MyProfileSerializer(profile)
+        return Response(serializer.data)

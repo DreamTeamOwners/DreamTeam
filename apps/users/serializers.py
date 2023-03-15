@@ -47,10 +47,19 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields =['first_name', 'job_position',
-                 'last_name', 'phone_number', 'country', 'description', 'experience', 'github']
+                 'last_name', 'phone_number', 'country', 'description', 'city', 'github',
+                 'experience_start_time', 'experience_end_time', 'experience_title', 'experience_description',
+                 'education_end_year', 'education_place', 'education_title', 'image']
 
 
+class MyProfileSerializer(serializers.ModelSerializer):
+    completion_percentage = serializers.SerializerMethodField()
 
+    class Meta:
+        model = Profile
+        fields = ['user', 'job_position', 'first_name', 'last_name', 'phone_number', 'country', 'city', 'description', 'github', 'image', 'experience_start_time', 'experience_end_time', 'experience_title', 'experience_description', 'education_end_year', 'education_place', 'education_title', 'completion_percentage']
 
+    def get_completion_percentage(self, obj):
+        return obj.get_completion_percentage()
 
 
