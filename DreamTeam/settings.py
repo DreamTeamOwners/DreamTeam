@@ -24,22 +24,40 @@ SECRET_KEY = 'django-insecure-fx4uz#d!aun@@-xow_nnu#25911x-r0bump2c5s+^gzto9qb)@
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+CORS_ALLOW_ALL_ORIGINS: True
+ALLOWED_HOSTS = ["http://localhost:3000", "http://127.0.0.1:8000", '127.0.0.1']
 
-ALLOWED_HOSTS = []
+CORS_ALLOW_METHODS = [
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+]
 
-
-# Application definition
+CORS_ALLOWED_ORIGINS = [
+    "https://example.com",
+    "https://sub.example.com",
+    "http://localhost:3000",
+    "http://127.0.0.1:8000",
+]
 
 INSTALLED_APPS = [
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'apps.users',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -50,6 +68,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'DreamTeam.urls'
+
+AUTH_USER_MODEL = 'users.MyUser'
 
 TEMPLATES = [
     {
@@ -79,6 +99,13 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
 }
 
 
@@ -122,3 +149,10 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+AUTH_USER_MODEL = 'users.MyUser'
+
+
+LOGIN_REDIRECT_URL = 'users'
+LOGOUT_REDIRECT_URL = 'login'
