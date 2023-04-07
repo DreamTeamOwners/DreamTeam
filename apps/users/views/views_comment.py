@@ -10,10 +10,13 @@ class CommentCreateAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = CommentPostSerializer
 
-    def post(self, request):
+    def post(self, request, group_id):
+        group = get_object_or_404(Group, id=group_id)
         serializer = CommentPostSerializer(
             data=request.data,
-            context={'request': request}
+            context={'request': request,
+                     'group': group
+                     }
         )
         if serializer.is_valid():
             serializer.save()
