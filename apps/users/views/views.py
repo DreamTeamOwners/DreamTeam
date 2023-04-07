@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-
+from apps.resume.models import Resume
 from apps.users.permissions import AnonPermission
 from apps.users.serializers import *
 
@@ -34,6 +34,10 @@ class UserRegisterAPIView(APIView):
                 user=user,
             )
             profile.save()
+            resume = Resume.objects.create(
+                user=user,
+            )
+            resume.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -72,14 +76,22 @@ class ProfileUpdateAPIView(APIView):
 
 
 class MyProfileAPIView(APIView):
+
     def get(self, request):
         profile = Profile.objects.get(user=request.user)
         serializer = MyProfileSerializer(profile)
         return Response(serializer.data)
 
 
-class UserListAPIView(generics.ListAPIView):
+class UserSearchAPIView(generics.ListAPIView):
     queryset = MyUser.objects.all()
     serializer_class = UserSearchSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['id', 'username']
+
+
+class GroupSearchView(generics.ListAPIView):
+    queryset = Group.objects.all()
+    serializer_class = GroupSearchSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['id', 'name', 'description']
