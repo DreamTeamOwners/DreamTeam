@@ -6,6 +6,7 @@ from .models import MyUser, Profile, Message, Group, Comment
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
@@ -45,7 +46,7 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields =['first_name', 'job_position',
+        fields = ['first_name', 'job_position',
                  'last_name', 'phone_number', 'country', 'description', 'city', 'github',
                  'experience_start_time', 'experience_end_time', 'experience_title', 'experience_description',
                  'education_end_year', 'education_place', 'education_title', 'image']
@@ -56,7 +57,7 @@ class MyProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ['user', 'job_position', 'first_name', 'last_name', 'phone_number', 'country', 'city', 'description',
+        fields = ['id', 'user', 'job_position', 'first_name', 'last_name', 'phone_number', 'country', 'city', 'description',
                   'github', 'image', 'experience_start_time', 'experience_end_time', 'experience_title',
                   'experience_description', 'education_end_year', 'education_place',
                   'education_title', 'completion_percentage']
@@ -94,11 +95,19 @@ class GroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Group
-        fields = ('id', 'name', 'members', 'messages', 'description', 'owner')
+        fields = ('id',
+                  'name',
+                  'members',
+                  'messages',
+                  'description',
+                  'owner'
+                  )
 
 
 class GroupCreateSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    user = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
 
     class Meta:
         model = Group
@@ -145,6 +154,11 @@ class CommentPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ('text', 'group', 'parent', 'username')
+
+    def create(self, validated_data):
+        group = self.context['group']
+        validated_data['group'] = group
+        return super().create(validated_data)
 
 
 class CommentUpdateSerializer(serializers.ModelSerializer):
